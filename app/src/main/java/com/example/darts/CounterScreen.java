@@ -168,16 +168,11 @@ public class CounterScreen extends AppCompatActivity {
                 }
             }
 
-            // double out logika
-            boolean validFinish = true;
-            if (newScore == 0 && isDoubleOut) {
-                // ha nem dupla az utolso, akkor nem vlaid
-                if (!lastThrow.startsWith("D") && !lastThrow.equals("DB")) {
-                    validFinish = false;
-                }
-            }
+            boolean bust = newScore < 0;
+            boolean isLastThrowDouble = lastThrow.startsWith("D") || lastThrow.equals("DB");
+            boolean validFinish = !bust
+                    && (!isDoubleOut || (newScore != 1 && (newScore != 0 || isLastThrowDouble)));
 
-            if (newScore < 0) validFinish = false;
 
             if (!validFinish) {
                 // tulment vagy nem valid finish -> pontok nem valtoznak
