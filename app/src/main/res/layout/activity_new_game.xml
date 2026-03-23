@@ -7,53 +7,56 @@
     android:layout_height="match_parent"
     tools:context=".NewGameActivity">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.06" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidePlayers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.18" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideGameMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.56" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideEndCondition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.73" />
+
     <TextView
         android:id="@+id/newGameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="107dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="107dp"
         android:text="New Game"
         android:textSize="48sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/guideTitle" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="120dp"
         android:text="Players:"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="408dp"
-        android:text="Game mode:"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="584dp"
-        android:text="End Condition:"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/guidePlayers" />
 
     <TableLayout
+        android:id="@+id/playersTable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -62,100 +65,55 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3">
 
-
         <TableRow android:padding="4dp">
-
-            <TextView
-                android:padding="8dp"
-                android:text="P1"
-                android:textColor="#ffffff" />
-
-            <Spinner
-                android:id="@+id/spinnerP1"
-                android:popupBackground="#0d0d1a" />
-
-            <TextView
-                android:padding="8dp"
-                android:text="P5"
-                android:textColor="#ffffff" />
-
-            <Spinner
-                android:id="@+id/spinnerP5"
-                android:popupBackground="#0d0d1a" />
+            <TextView android:padding="8dp" android:text="P1" android:textColor="#ffffff" />
+            <Spinner android:id="@+id/spinnerP1" android:popupBackground="#0d0d1a" />
+            <TextView android:padding="8dp" android:text="P5" android:textColor="#ffffff" />
+            <Spinner android:id="@+id/spinnerP5" android:popupBackground="#0d0d1a" />
         </TableRow>
 
         <TableRow android:padding="4dp">
-
-            <TextView
-                android:padding="8dp"
-                android:text="P2"
-                android:textColor="#ffffff" />
-
-            <Spinner
-                android:id="@+id/spinnerP2"
-                android:popupBackground="#0d0d1a" />
-
-            <TextView
-                android:padding="8dp"
-                android:text="P6"
-                android:textColor="#ffffff" />
-
-            <Spinner
-                android:id="@+id/spinnerP6"
-                android:popupBackground="#0d0d1a" />
+            <TextView android:padding="8dp" android:text="P2" android:textColor="#ffffff" />
+            <Spinner android:id="@+id/spinnerP2" android:popupBackground="#0d0d1a" />
+            <TextView android:padding="8dp" android:text="P6" android:textColor="#ffffff" />
+            <Spinner android:id="@+id/spinnerP6" android:popupBackground="#0d0d1a" />
         </TableRow>
 
         <TableRow android:padding="4dp">
-
-            <TextView
-                android:padding="8dp"
-                android:text="P3"
-                android:textColor="#ffffff" />
-
-            <Spinner
-                android:id="@+id/spinnerP3"
-                android:popupBackground="#0d0d1a" />
-
-            <TextView
-                android:padding="8dp"
-                android:text="P7"
-                android:textColor="#ffffff" />
-
-            <Spinner
-                android:id="@+id/spinnerP7"
-                android:popupBackground="#0d0d1a" />
+            <TextView android:padding="8dp" android:text="P3" android:textColor="#ffffff" />
+            <Spinner android:id="@+id/spinnerP3" android:popupBackground="#0d0d1a" />
+            <TextView android:padding="8dp" android:text="P7" android:textColor="#ffffff" />
+            <Spinner android:id="@+id/spinnerP7" android:popupBackground="#0d0d1a" />
         </TableRow>
 
         <TableRow android:padding="4dp">
-
-            <TextView
-                android:padding="8dp"
-                android:text="P4"
-                android:textColor="#ffffff" />
-
-            <Spinner
-                android:id="@+id/spinnerP4"
-                android:popupBackground="#0d0d1a" />
-
-            <TextView
-                android:padding="8dp"
-                android:text="P8"
-                android:textColor="#ffffff" />
-
-            <Spinner
-                android:id="@+id/spinnerP8"
-                android:popupBackground="#0d0d1a" />
+            <TextView android:padding="8dp" android:text="P4" android:textColor="#ffffff" />
+            <Spinner android:id="@+id/spinnerP4" android:popupBackground="#0d0d1a" />
+            <TextView android:padding="8dp" android:text="P8" android:textColor="#ffffff" />
+            <Spinner android:id="@+id/spinnerP8" android:popupBackground="#0d0d1a" />
         </TableRow>
 
     </TableLayout>
 
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Game mode:"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideGameMode" />
+
     <RadioGroup
         android:id="@+id/gameMode"
-        android:layout_width="325dp"
-        android:layout_height="106dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginTop="4dp"
         android:checkedButton="@id/is301"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5">
 
@@ -174,13 +132,25 @@
             android:textColor="@color/white" />
     </RadioGroup>
 
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="End Condition:"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideEndCondition" />
+
     <RadioGroup
         android:id="@+id/endCondition"
-        android:layout_width="343dp"
-        android:layout_height="105dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
         android:checkedButton="@id/isDoubleOut"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6">
 
@@ -202,24 +172,29 @@
     <Button
         android:id="@+id/backButton"
         style="@style/Theme.Darts"
-        android:layout_width="140dp"
+        android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="32dp"
         android:onClick="onBackClick"
         android:text="Back"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/startGameButton"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/startGameButton"
-        android:layout_width="140dp"
+        android:layout_width="0dp"
         android:layout_height="45dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="38dp"
+        android:layout_marginBottom="32dp"
         android:onClick="onStartGameClick"
         android:text="Start"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/backButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
