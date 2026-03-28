@@ -82,7 +82,7 @@
         android:layout_marginStart="60dp"
         android:layout_marginEnd="60dp"
         android:backgroundTint="#6A0303"
-        android:onClick="onNewGameClick"
+        android:onClick="onUsersClick"
         android:text="Users"
         android:textColor="@color/white"
         android:textSize="20sp"
