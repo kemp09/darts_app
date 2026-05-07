@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Darts">
         <activity
+            android:name=".UsersActivity"
+            android:exported="false" />
+        <activity
             android:name=".CounterScreen"
             android:exported="false" />
         <activity

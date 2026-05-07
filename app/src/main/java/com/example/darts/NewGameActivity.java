@@ -31,18 +31,25 @@ public class NewGameActivity extends AppCompatActivity {
         // EdgeToEdge.enable(this);
         setContentView(R.layout.activity_new_game);
 
+        List<String> savedUsers = UserStorage.getUsers(this);
+
         for (int id : spinnerIds) {
-            setupSpinner(findViewById(id));
+            setupSpinner(findViewById(id), savedUsers);
         }
 
     }
 
     // https://www.geeksforgeeks.org/android/spinner-in-android-with-example/
-    private void setupSpinner(Spinner spinner) {
+    private void setupSpinner(Spinner spinner, List<String> savedUsers) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapter.add("Select Player");
+
+        for (String user : savedUsers) {
+            adapter.add(user);
+        }
+
         adapter.add("Guest");
         spinner.setAdapter(adapter);
 
