@@ -1,7 +1,12 @@
 package com.example.darts;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,8 +20,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Stack;
 
-public class CounterScreen extends AppCompatActivity {
+public class CounterScreen extends AppCompatActivity implements SensorEventListener {
 
     int selectedThrow = -1;
     String[] throwsLabel = {"0", "0", "0"};
@@ -30,6 +36,25 @@ public class CounterScreen extends AppCompatActivity {
     String[] players;
     TextView tvScore;
     TextView tvPlayer;
+    Button enterBtn;
+    Button nextBtn;
+    Button undoBtn;
+    String endCondition;
+
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private long lastShakeTime = 0;
+
+    class GameState {
+        int playerIndex;
+        Map<String, Integer> scores;
+        GameState(int pIdx, Map<String, Integer> s) {
+            playerIndex = pIdx;
+            scores = new LinkedHashMap<>(s);
+        }
+    }
+
+    Stack<GameState> history = new Stack<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +67,15 @@ public class CounterScreen extends AppCompatActivity {
             return insets;
         });
 
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        if (sensorManager != null) {
+            accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        }
+
         // intent adatok, atadott adatok
         Intent intent = getIntent();
         int maxScore = intent.getIntExtra("gameMode", 501);
-        String endCondition = intent.getStringExtra("endCondition");
+        endCondition = intent.getStringExtra("endCondition");
         players = intent.getStringArrayExtra("players");
 
         // pontszamok feltoltese alap ertekkel
@@ -56,8 +86,6 @@ public class CounterScreen extends AppCompatActivity {
         // player es score ui elemek
         tvPlayer = findViewById(R.id.tvPlayer);
         tvScore = findViewById(R.id.tvScore);
-        tvPlayer.setText(players[currentPlayerIndex]);
-        tvScore.setText(String.valueOf(maxScore));
 
         // throw textviewk
         throw1 = findViewById(R.id.throw1);
@@ -127,13 +155,17 @@ public class CounterScreen extends AppCompatActivity {
             throwsLabel[selectedThrow] = label;
             currentInput = "";
             updateTextViews();
+            autoAdvance();
         });
 
         // enter es next gombok
-        Button enterBtn = findViewById(R.id.enterBtn);
-        Button nextBtn = findViewById(R.id.nextBtn);
+        enterBtn = findViewById(R.id.enterBtn);
+        nextBtn = findViewById(R.id.nextBtn);
+        undoBtn = findViewById(R.id.undoBtn);
 
         enterBtn.setOnClickListener(v -> {
+            history.push(new GameState(currentPlayerIndex, scores));
+
             // dobott pontok osszeszamolasa
             int sumOfThrows = 0;
             for (TextView t : throwsArr) {
@@ -156,7 +188,7 @@ public class CounterScreen extends AppCompatActivity {
             int currentScore = scores.get(currentPlayer);
             int newScore = currentScore - sumOfThrows;
 
-            boolean isDoubleOut = endCondition.equals("doubleOut");
+            boolean isDoubleOut = endCondition.equals("Double out");
 
             // utolso dobas tarolasa
             String lastThrow = "";
@@ -170,9 +202,7 @@ public class CounterScreen extends AppCompatActivity {
 
             boolean bust = newScore < 0;
             boolean isLastThrowDouble = lastThrow.startsWith("D") || lastThrow.equals("DB");
-            boolean validFinish = !bust
-                    && (!isDoubleOut || (newScore != 1 && (newScore != 0 || isLastThrowDouble)));
-
+            boolean validFinish = !bust && (!isDoubleOut || (newScore != 1 && (newScore != 0 || isLastThrowDouble)));
 
             if (!validFinish) {
                 // tulment vagy nem valid finish -> pontok nem valtoznak
@@ -180,25 +210,98 @@ public class CounterScreen extends AppCompatActivity {
             } else {
                 scores.put(currentPlayer, newScore);
                 tvScore.setText(String.valueOf(newScore));
+
+                if (newScore == 0) {
+                    showWinnerDialog(currentPlayer);
+                    return;
+                }
             }
 
             // enter es next vissza
             enterBtn.setEnabled(false);
             nextBtn.setEnabled(true);
+            undoBtn.setEnabled(true);
+            updateUI();
         });
 
         nextBtn.setOnClickListener(v -> {
             // kovetkezo jatekos
+            history.push(new GameState(currentPlayerIndex, scores));
             currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
             nextBtn.setEnabled(false);
             enterBtn.setEnabled(true);
+            undoBtn.setEnabled(true);
             resetThrows();
-            tvPlayer.setText(players[currentPlayerIndex]);
-            tvScore.setText(String.valueOf(scores.get(players[currentPlayerIndex])));
+            updateUI();
         });
+
+        undoBtn.setOnClickListener(v -> performUndo());
 
         // alapertelmezett: elso throw kivalasztva + 0zas
         resetThrows();
+        updateUI();
+        undoBtn.setEnabled(false);
+    }
+
+    private void performUndo() {
+        if (!history.isEmpty()) {
+            GameState prevState = history.pop();
+            currentPlayerIndex = prevState.playerIndex;
+            scores = prevState.scores;
+            resetThrows();
+            updateUI();
+            enterBtn.setEnabled(true);
+            nextBtn.setEnabled(false);
+            if (history.isEmpty()) {
+                undoBtn.setEnabled(false);
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (sensorManager != null && accelerometer != null) {
+            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (sensorManager != null) {
+            sensorManager.unregisterListener(this);
+        }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float gX = event.values[0] / SensorManager.GRAVITY_EARTH;
+            float gY = event.values[1] / SensorManager.GRAVITY_EARTH;
+            float gZ = event.values[2] / SensorManager.GRAVITY_EARTH;
+
+            float gForce = (float) Math.sqrt(gX * gX + gY * gY + gZ * gZ);
+
+            if (gForce > 1.5f) {
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastShakeTime > 1000) {
+                    lastShakeTime = currentTime;
+                    performUndo();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    private void updateUI() {
+        String p = players[currentPlayerIndex];
+        tvPlayer.setText(p);
+        int sc = scores.get(p);
+        tvScore.setText(String.valueOf(sc));
     }
 
     void resetThrows() {
@@ -207,6 +310,12 @@ public class CounterScreen extends AppCompatActivity {
         selectedThrow = 0;
         highlightSelected(0);
         currentInput = "";
+        ToggleButton btnDouble = findViewById(R.id.toggleDouble);
+        ToggleButton btnTriple = findViewById(R.id.toggleTriple);
+        btnDouble.setChecked(false);
+        btnTriple.setChecked(false);
+        doubleActive = false;
+        tripleActive = false;
     }
 
     void highlightSelected(int index) {
@@ -222,6 +331,10 @@ public class CounterScreen extends AppCompatActivity {
         if (Integer.parseInt(newInput) > 20) return;
         currentInput = newInput;
         updateThrow();
+
+        if (Integer.parseInt(newInput) >= 3 || currentInput.length() == 2) {
+            autoAdvance();
+        }
     }
 
     void updateThrow() {
@@ -238,5 +351,37 @@ public class CounterScreen extends AppCompatActivity {
         throw1.setText(throwsLabel[0]);
         throw2.setText(throwsLabel[1]);
         throw3.setText(throwsLabel[2]);
+    }
+
+    void autoAdvance() {
+        if (selectedThrow < 2) {
+            selectedThrow++;
+            highlightSelected(selectedThrow);
+            ToggleButton btnDouble = findViewById(R.id.toggleDouble);
+            ToggleButton btnTriple = findViewById(R.id.toggleTriple);
+            btnDouble.setChecked(false);
+            btnTriple.setChecked(false);
+            doubleActive = false;
+            tripleActive = false;
+        }
+    }
+
+    private void showWinnerDialog(String winner) {
+        new android.app.AlertDialog.Builder(this, android.app.AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+                .setTitle("Game Over!")
+                .setMessage("Winner: " + winner)
+                .setCancelable(false)
+                .setPositiveButton("Main Menu", (dialog, which) -> {
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                })
+                .setNegativeButton("Play Again", (dialog, which) -> {
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                })
+                .show();
     }
 }

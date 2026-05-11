@@ -42,6 +42,14 @@
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
+            <TextView
+                android:id="@+id/tvTip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="#AAAAAA"
+                android:textSize="14sp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -86,13 +94,24 @@
                 android:paddingTop="8dp">
 
                 <Button
+                    android:id="@+id/undoBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    android:background="@drawable/btn_next"
+                    android:text="Undo"
+                    android:textColor="@color/white"
+                    app:backgroundTint="@null" />
+
+                <Button
                     android:id="@+id/enterBtn"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
                     android:background="@drawable/btn_next"
-                    android:onClick="onEnterClick"
                     android:text="Enter"
                     android:textColor="@color/white"
                     app:backgroundTint="@null" />
@@ -102,10 +121,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="4dp"
                     android:background="@drawable/btn_next"
                     android:enabled="false"
-                    android:onClick="onNextClick"
                     android:text="Next"
                     android:textColor="@color/white"
                     app:backgroundTint="@null" />

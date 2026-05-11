@@ -6,11 +6,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.util.List;
 
@@ -23,12 +19,12 @@ public class UsersActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //EdgeToEdge.enable(this);
         setContentView(R.layout.activity_users);
 
         etUserName = findViewById(R.id.etUserName);
         llUserList = findViewById(R.id.llUserList);
         Button btnAdd = findViewById(R.id.btnAddUser);
+        Button btnRandom = findViewById(R.id.btnRandomUser);
 
         users = UserStorage.getUsers(this);
         refreshList();
@@ -40,6 +36,14 @@ public class UsersActivity extends AppCompatActivity {
             UserStorage.saveUsers(this, users);
             etUserName.setText("");
             refreshList();
+        });
+
+        btnRandom.setOnClickListener(v -> {
+            btnRandom.setEnabled(false);
+            NameGenerator.getRandomName(name -> {
+                etUserName.setText(name);
+                btnRandom.setEnabled(true);
+            });
         });
     }
 

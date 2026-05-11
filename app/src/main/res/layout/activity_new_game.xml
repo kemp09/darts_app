@@ -51,49 +51,39 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="Players:"
+        android:textColor="#ffffff"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidePlayers" />
 
-    <TableLayout
-        android:id="@+id/playersTable"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/btnAddPlayer"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="+ Add Player"
+        android:textColor="#9E0000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView3" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        android:padding="16dp"
-        android:stretchColumns="1,3"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guideGameMode"
         app:layout_constraintTop_toBottomOf="@+id/textView3">
 
-        <TableRow android:padding="4dp">
-            <TextView android:padding="8dp" android:text="P1" android:textColor="#ffffff" />
-            <Spinner android:id="@+id/spinnerP1" android:popupBackground="#0d0d1a" />
-            <TextView android:padding="8dp" android:text="P5" android:textColor="#ffffff" />
-            <Spinner android:id="@+id/spinnerP5" android:popupBackground="#0d0d1a" />
-        </TableRow>
-
-        <TableRow android:padding="4dp">
-            <TextView android:padding="8dp" android:text="P2" android:textColor="#ffffff" />
-            <Spinner android:id="@+id/spinnerP2" android:popupBackground="#0d0d1a" />
-            <TextView android:padding="8dp" android:text="P6" android:textColor="#ffffff" />
-            <Spinner android:id="@+id/spinnerP6" android:popupBackground="#0d0d1a" />
-        </TableRow>
-
-        <TableRow android:padding="4dp">
-            <TextView android:padding="8dp" android:text="P3" android:textColor="#ffffff" />
-            <Spinner android:id="@+id/spinnerP3" android:popupBackground="#0d0d1a" />
-            <TextView android:padding="8dp" android:text="P7" android:textColor="#ffffff" />
-            <Spinner android:id="@+id/spinnerP7" android:popupBackground="#0d0d1a" />
-        </TableRow>
-
-        <TableRow android:padding="4dp">
-            <TextView android:padding="8dp" android:text="P4" android:textColor="#ffffff" />
-            <Spinner android:id="@+id/spinnerP4" android:popupBackground="#0d0d1a" />
-            <TextView android:padding="8dp" android:text="P8" android:textColor="#ffffff" />
-            <Spinner android:id="@+id/spinnerP8" android:popupBackground="#0d0d1a" />
-        </TableRow>
-
-    </TableLayout>
+        <LinearLayout
+            android:id="@+id/playersContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp" />
+    </ScrollView>
 
     <TextView
         android:id="@+id/textView5"
